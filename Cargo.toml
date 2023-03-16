@@ -3,7 +3,7 @@
 	description = "An automatic solver for the New York Times' Spelling Bee game, built in Rust."
 	edition     = "2021"
 	name        = "spelling-queen"
-	version     = "0.0.0"
+	version     = "1.0.0"
 
 	# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -13,4 +13,5 @@
 	dialoguer = "0.10.3"                                     # Prompting.
 
 	# Misc.
+	color-eyre  = "0.6.2" # Display errors to the user and make them pretty :3.
 	lazy_static = "1.4.0" # Mimic const and const fn.
