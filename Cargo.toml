@@ -1,0 +1,14 @@
+[package]
+	authors     = ["Ian Pratt <ianjdpratt@gmail.com>"]
+	description = "An automatic solver for the New York Times' Spelling Bee game."
+	edition     = "2021"
+	name        = "spelling-queen"
+	version     = "0.0.0"
+
+	# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+	# CLI utilities.
+	clap      = "4.1.8"  # Parsing command-line arguments
+	dialoguer = "0.10.3" # Prompting
+lazy_static = "1.4.0"
