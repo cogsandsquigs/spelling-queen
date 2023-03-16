@@ -25,14 +25,42 @@ fn get_word_bitflags() -> Vec<u32> {
         .iter()
         .map(|word| {
             word.chars()
-                .map(|c| 1_u32 << c as u32 - 'a' as u32)
+                .map(char_to_bitflag)
+                // OR them all together to create one big bitflag.
                 .fold(0, |acc, x| acc | x)
         })
         .collect()
 }
 
+/// Converts an ASCII character into a bitflag.
+fn char_to_bitflag(c: char) -> u32 {
+    1_u32 << c as u32 - 'a' as u32
+}
+
+/// Gets all the possible words that could be made with both the middle letter and the other
+/// required 6 letters. All characters MUST be lowercase.
+fn get_possible_words(middle: char, others: [char; 6]) -> Vec<&'static str> {
+    // Precomputatiton
+    let middle_flag = char_to_bitflag(middle);
+    let others_flags = others
+        .into_iter()
+        .map(char_to_bitflag)
+        .fold(0, |acc, x| acc | x);
+
+    WORD_FLAGS
+        .iter()
+        .enumerate()
+        // Remove all words without the middle character.
+        .filter(|(_, flags)| *flags & middle_flag != 0)
+        // Remove all words without any of the other characters.
+        .filter(|(_, flags)| *flags & !(others_flags | middle_flag) == 0)
+        .map(|(idx, _)| WORD_LIST[idx])
+        .collect()
+}
+
 fn main() {
-    println!("{:?}", &WORD_LIST[0..3]);
-    println!("{:?}", &WORD_FLAGS[0..3]);
-    println!("Hello, world!");
+    let middle = 'i';
+    let others = ['a', 'm', 'y', 'd', 't', 'e'];
+
+    println!("{:?}", get_possible_words(middle, others));
 }
