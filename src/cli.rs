@@ -1,6 +1,6 @@
 use clap::Parser;
 use color_eyre::eyre::Result;
-use dialoguer::{Input, MultiSelect};
+use dialoguer::Input;
 
 /// An automatic solver for the New York Times' Spelling Bee game, built in Rust.
 #[derive(Debug, Parser)]
@@ -52,30 +52,6 @@ fn prompt_for_middle() -> Result<char> {
 /// Prompts for the other letters if they have not been entered. Makes sure they are
 /// not the middle letter.
 fn prompt_for_others(middle: char) -> Result<[char; 6]> {
-    // let letters: Vec<char> = ('a'..'z').into_iter().filter(|c| *c != middle).collect();
-
-    // let mut chosen: Vec<usize> = vec![];
-
-    // while chosen.len() != 6 {
-    //     chosen = MultiSelect::new()
-    //         .items(&letters)
-    //         .with_prompt("Select the letters on the outer ring of the hexagon")
-    //         .interact()?;
-
-    //     if chosen.len() < 6 {
-    //         println!("Please select more letters (only 6).")
-    //     } else if chosen.len() > 6 {
-    //         println!("Please select less letters (only 6).")
-    //     }
-    // }
-
-    // Ok(chosen
-    //     .iter()
-    //     .map(|idx| letters[*idx])
-    //     .collect::<Vec<_>>()
-    //     .try_into()
-    //     .expect("There should only be six characters here!"))
-
     loop {
         let chosen: String = Input::new()
             .with_prompt("Enter the letters on the outer ring of the hexagon, separated by a space")
@@ -99,6 +75,8 @@ fn prompt_for_others(middle: char) -> Result<[char; 6]> {
                 println!("'{}' is not a letter, please try again.", letter);
                 continue;
             }
+
+            // TODO: Make letter sure it is not the middle letter.
 
             others.push(
                 letter
