@@ -14,7 +14,7 @@ fn main() -> Result<()> {
     let words = solver::get_possible_words(middle, others);
 
     // If there are no words, print an error message.
-    if words.len() == 0 {
+    if words.is_empty() {
         eprintln!("No possible words! Try checking your input.")
     }
     // Otherwise, print them out!

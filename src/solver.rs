@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 
 lazy_static! {
-    static ref WORD_LIST: Vec<&'static str> = get_words(4);
+    static ref WORD_LIST: Vec<String> = get_words(4);
     static ref WORD_FLAGS: Vec<u32> = get_word_bitflags();
 }
 
@@ -9,11 +9,13 @@ lazy_static! {
 /// if `min_length` is 4, then words less than 4 characters are filtered out, while words
 /// of length 4 or greater are kept. Note that all words are lowercase.
 /// TODO: Make this compile-time
-/// TODO: Make this only nytimes words
-fn get_words(min_length: usize) -> Vec<&'static str> {
-    include_str!("words_alpha.txt")
+/// TODO: Make this only nytimes words - currently, its scrabble words?
+fn get_words(min_length: usize) -> Vec<String> {
+    include_str!("collins_scrabble_words_2019.txt")
         .lines()
         .filter(|word| word.len() >= min_length)
+        // Standardize word case.
+        .map(|word| word.to_lowercase())
         .collect()
 }
 
@@ -34,7 +36,7 @@ fn get_word_bitflags() -> Vec<u32> {
 
 /// Converts an ASCII character into a bitflag.
 fn char_to_bitflag(c: char) -> u32 {
-    1_u32 << c as u32 - 'a' as u32
+    1_u32 << (c as u32 - 'a' as u32)
 }
 
 /// Gets all the possible words that could be made with both the middle letter and the other
@@ -54,6 +56,6 @@ pub fn get_possible_words(middle: char, others: [char; 6]) -> Vec<&'static str> 
         .filter(|(_, flags)| *flags & middle_flag != 0)
         // Remove all words without any of the other characters.
         .filter(|(_, flags)| *flags & !(others_flags | middle_flag) == 0)
-        .map(|(idx, _)| WORD_LIST[idx])
+        .map(|(idx, _)| WORD_LIST[idx].as_str())
         .collect()
 }

@@ -22,10 +22,7 @@ pub fn parse_letters() -> Result<(char, [char; 6])> {
     let args = Cli::parse();
 
     // Get middle character.
-    let middle = args
-        .middle
-        .map(|middle| Ok(middle))
-        .unwrap_or_else(prompt_for_middle)?;
+    let middle = args.middle.map(Ok).unwrap_or_else(prompt_for_middle)?;
 
     // Get other characters
     let others = args
@@ -46,7 +43,7 @@ fn prompt_for_middle() -> Result<char> {
         .with_prompt("Enter the letter in the middle of the hexagon")
         .interact()?;
 
-    return Ok(chosen);
+    Ok(chosen)
 }
 
 /// Prompts for the other letters if they have not been entered. Makes sure they are
@@ -59,13 +56,21 @@ fn prompt_for_others(middle: char) -> Result<[char; 6]> {
 
         let chosen = chosen.split_whitespace().collect::<Vec<_>>();
 
-        // Report bad input.
-        if chosen.len() > 6 {
-            println!("Too many letters, please try again.");
-            continue;
-        } else if chosen.len() < 6 {
-            println!("Not enough letters, please try again.");
-            continue;
+        // Rewrite the above code to use a match statement.
+        match chosen.len() {
+            6 => (),
+
+            // Greater than 6
+            _ if chosen.len() > 6 => {
+                println!("Too many letters, please try again.");
+                continue;
+            }
+
+            // Less than 6
+            _ => {
+                println!("Not enough letters, please try again.");
+                continue;
+            }
         }
 
         let mut others = vec![];
@@ -77,6 +82,10 @@ fn prompt_for_others(middle: char) -> Result<[char; 6]> {
             }
 
             // TODO: Make letter sure it is not the middle letter.
+            if letter.starts_with(middle) {
+                println!("'{}' is the middle letter, please try again.", letter);
+                continue;
+            }
 
             others.push(
                 letter
